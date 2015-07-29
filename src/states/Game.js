@@ -30,20 +30,16 @@ SmathGame.Game.prototype = {
         this.add.sprite(0, 0, 'green');
 
         var map = this.game.add.tilemap();
-        map.addTilesetImage('square');
-        map.addTilesetImage('empty');
+        map.addTilesetImage('tiles');
 
         var layer = map.create('layer', 10, 10, 32, 32);
-        /*layer.scrollFactorX = 0.5;
-        layer.scrollFactorY = 0.5;
-        layer.resizeWorld();*/
 
-        map.putTile(0,5,5);
+        map.putTile(0, 5, 5);
+        map.putTile(1, 0, 5);
+        map.putTile(2, 1, 5);
+        map.putTile(3, 3, 5);
 
-        map.putTile(0,6,6);
-
-        map.putTile(25,7,7);
-        map.getTile(0,0).set
+        map.random(1, 1, 6, 6);
 
     },
 

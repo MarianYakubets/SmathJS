@@ -36,7 +36,7 @@ SmathGame.Boot.prototype = {
         this.load.image('green', 'res/img/green.jpg');
         this.load.image('square', 'res/img/square_grey.png');
         this.load.image('empty', 'res/img/square_empty.png');
-        this.load.image('bar', 'res/img/ground_1x1.png');
+        this.load.image('tiles', 'res/img/tiles.png');
 
     },
 
