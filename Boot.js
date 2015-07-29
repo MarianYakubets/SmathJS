@@ -34,7 +34,8 @@ SmathGame.Boot.prototype = {
 
         //  Here we load the assets required for our preload (in this case a background and a loading bar)
         this.load.image('green', 'res/img/green.jpg');
-        this.load.image('pomegranate', 'res/img/pomegranate.jpg');
+        this.load.image('square', 'res/img/square_grey.png');
+        this.load.image('empty', 'res/img/square_empty.png');
         this.load.image('bar', 'res/img/ground_1x1.png');
 
     },

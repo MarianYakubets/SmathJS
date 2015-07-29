@@ -1,4 +1,3 @@
-
 SmathGame.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
@@ -26,27 +25,37 @@ SmathGame.Game = function (game) {
 };
 
 SmathGame.Game.prototype = {
-
     create: function () {
-
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
+        this.add.sprite(0, 0, 'green');
+
+        var map = this.game.add.tilemap();
+        map.addTilesetImage('square');
+        map.addTilesetImage('empty');
+
+        var layer = map.create('layer', 10, 10, 32, 32);
+        /*layer.scrollFactorX = 0.5;
+        layer.scrollFactorY = 0.5;
+        layer.resizeWorld();*/
+
+        map.putTile(0,5,5);
+
+        map.putTile(0,6,6);
+
+        map.putTile(25,7,7);
+        map.getTile(0,0).set
 
     },
 
     update: function () {
-
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-
     },
 
     quitGame: function (pointer) {
-
         //  Here you should destroy anything you no longer need.
         //  Stop music, delete sprites, purge caches, free resources, all that good stuff.
-
         //  Then let's go back to the main menu.
         this.state.start('MainMenu');
-
     }
 
 };
