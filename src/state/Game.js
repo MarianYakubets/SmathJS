@@ -1,4 +1,4 @@
-SmathGame.Game = function (game) {
+Smath.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
 
@@ -24,7 +24,7 @@ SmathGame.Game = function (game) {
 
 };
 
-SmathGame.Game.prototype = {
+Smath.Game.prototype = {
     create: function () {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         this.add.sprite(0, 0, 'green');
@@ -32,14 +32,18 @@ SmathGame.Game.prototype = {
         var map = this.game.add.tilemap();
         map.addTilesetImage('tiles');
 
-        var layer = map.create('layer', 10, 10, 32, 32);
+        var layer = map.create('layer', 20, 20, 32, 32);
+
+        map.random(1, 1, 13, 13);
 
         map.putTile(0, 5, 5);
-        map.putTile(1, 0, 5);
+        map.putTile(1, 7, 5);
         map.putTile(2, 1, 5);
-        map.putTile(3, 3, 5);
+        map.putTile(3, 2, 5);
+        map.putTile(4, 3, 5);
+        map.putTile(5, 4, 5);
+        map.putTile(6, 6, 5);
 
-        map.random(1, 1, 6, 6);
 
     },
 

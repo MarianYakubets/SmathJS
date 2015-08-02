@@ -1,13 +1,12 @@
-var SmathGame = {};
+var Smath = {};
 
-SmathGame.Boot = function (game) {
+Smath.Boot = function (game) {
 
 };
 
-SmathGame.Boot.prototype = {
+Smath.Boot.prototype = {
 
     init: function () {
-
         //  Unless you specifically know your game needs to support multi-touch I would recommend setting this to 1
         this.input.maxPointers = 1;
 
@@ -31,12 +30,11 @@ SmathGame.Boot.prototype = {
     },
 
     preload: function () {
-
         //  Here we load the assets required for our preload (in this case a background and a loading bar)
         this.load.image('green', 'res/img/green.jpg');
         this.load.image('square', 'res/img/square_grey.png');
         this.load.image('empty', 'res/img/square_empty.png');
-        this.load.image('tiles', 'res/img/tiles.png');
+        this.load.image('tiles', 'res/img/tiles32.png');
 
     },
 

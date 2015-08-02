@@ -1,5 +1,4 @@
-
-SmathGame.Preload = function (game) {
+Smath.Preload = function (game) {
 
 	this.background = null;
 	this.preloadBar = null;
@@ -8,7 +7,7 @@ SmathGame.Preload = function (game) {
 
 };
 
-SmathGame.Preload.prototype = {
+Smath.Preload.prototype = {
 
 	preload: function () {
 

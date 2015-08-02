@@ -1,9 +1,8 @@
-
-SmathGame.MainMenu = function (game) {
+Smath.MainMenu = function (game) {
 	this.playButton = null;
 };
 
-SmathGame.MainMenu.prototype = {
+Smath.MainMenu.prototype = {
 
 	create: function () {
 		//	We've already preloaded our assets, so let's kick right into the Main Menu itself.
