@@ -32,22 +32,10 @@ Smath.Game.prototype = {
     create: function () {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         this.add.sprite(0, 0, 'green');
-
         this.map = this.game.add.tilemap();
         this.map.addTilesetImage('tiles');
-
         this.layer = this.map.create('layer', 20, 20, 32, 32);
-
-        this.map.random(1, 1, 13, 13);
-
-        this.map.putTile(0, 5, 5);
-        this.map.putTile(1, 7, 5);
-        this.map.putTile(2, 1, 5);
-        this.map.putTile(3, 2, 5);
-        this.map.putTile(4, 3, 5);
-        this.map.putTile(5, 4, 5);
-        this.map.putTile(6, 6, 5);
-
+        this.fill();
         this.createTileSelector();
         this.game.input.addMoveCallback(this.updateMarker, this);
     },
@@ -77,20 +65,26 @@ Smath.Game.prototype = {
     },
 
     updateMarker: function () {
+        var x = this.layer.getTileX(this.game.input.activePointer.worldX);
+        var y = this.layer.getTileY(this.game.input.activePointer.worldY);
 
-        this.marker.x = this.layer.getTileX(this.game.input.activePointer.worldX) * 32;
-        this.marker.y = this.layer.getTileY(this.game.input.activePointer.worldY) * 32;
+        this.marker.x = x* 32;
+        this.marker.y = y * 32;
 
-        /* if (this.game.input.mousePointer.isDown)
-         {
-         this.map.putTile(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), currentLayer);
-         // map.fill(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), 4, 4, currentLayer);
-         }*/
-
+        if (this.game.input.mousePointer.isDown) {
+            var type = this.rnd.between(0,9);
+            this.map.putTile(type, x, y, this.layer);
+        }
     },
 
     fill: function () {
-
+        this.map.putTile(0, 5, 5);
+        this.map.putTile(1, 7, 5);
+        this.map.putTile(2, 1, 5);
+        this.map.putTile(3, 2, 5);
+        this.map.putTile(4, 3, 5);
+        this.map.putTile(5, 4, 5);
+        this.map.putTile(6, 6, 5);
     },
 
 
