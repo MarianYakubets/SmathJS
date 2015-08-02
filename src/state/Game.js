@@ -18,6 +18,10 @@ Smath.Game = function (game) {
     this.particles; //  the particle manager (Phaser.Particles)
     this.physics;   //  the physics manager (Phaser.Physics)
     this.rnd;       //  the repeatable random number generator (Phaser.RandomDataGenerator)
+    //Own
+    this.marker;
+    this.map;
+    this.layer;
 
     //  You can use any of these from any function within this State.
     //  But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -29,23 +33,66 @@ Smath.Game.prototype = {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         this.add.sprite(0, 0, 'green');
 
-        var map = this.game.add.tilemap();
-        map.addTilesetImage('tiles');
+        this.map = this.game.add.tilemap();
+        this.map.addTilesetImage('tiles');
 
-        var layer = map.create('layer', 20, 20, 32, 32);
+        this.layer = this.map.create('layer', 20, 20, 32, 32);
 
-        map.random(1, 1, 13, 13);
+        this.map.random(1, 1, 13, 13);
 
-        map.putTile(0, 5, 5);
-        map.putTile(1, 7, 5);
-        map.putTile(2, 1, 5);
-        map.putTile(3, 2, 5);
-        map.putTile(4, 3, 5);
-        map.putTile(5, 4, 5);
-        map.putTile(6, 6, 5);
+        this.map.putTile(0, 5, 5);
+        this.map.putTile(1, 7, 5);
+        this.map.putTile(2, 1, 5);
+        this.map.putTile(3, 2, 5);
+        this.map.putTile(4, 3, 5);
+        this.map.putTile(5, 4, 5);
+        this.map.putTile(6, 6, 5);
 
+        this.createTileSelector();
+        this.game.input.addMoveCallback(this.updateMarker, this);
+    },
+
+    createTileSelector: function () {
+        //  Our tile selection window
+        //var tileSelector = this.game.add.group();
+
+        var tileSelectorBackground = this.game.make.graphics();
+        tileSelectorBackground.beginFill(0x000000, 0.5);
+        tileSelectorBackground.drawRect(0, 0, 800, 34);
+        tileSelectorBackground.endFill();
+
+        //tileSelector.add(tileSelectorBackground);
+
+        // var tileStrip = tileSelector.create(1, 1, 'ground_1x1');
+        // tileStrip.inputEnabled = true;
+        //tileStrip.events.onInputDown.add(pickTile, this);
+
+        //tileSelector.fixedToCamera = true;
+
+        //  Our painting marker
+        this.marker = this.game.add.graphics();
+        this.marker.lineStyle(2, 0x000000, 1);
+        this.marker.drawRect(0, 0, 32, 32);
 
     },
+
+    updateMarker: function () {
+
+        this.marker.x = this.layer.getTileX(this.game.input.activePointer.worldX) * 32;
+        this.marker.y = this.layer.getTileY(this.game.input.activePointer.worldY) * 32;
+
+        /* if (this.game.input.mousePointer.isDown)
+         {
+         this.map.putTile(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), currentLayer);
+         // map.fill(currentTile, currentLayer.getTileX(marker.x), currentLayer.getTileY(marker.y), 4, 4, currentLayer);
+         }*/
+
+    },
+
+    fill: function () {
+
+    },
+
 
     update: function () {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
