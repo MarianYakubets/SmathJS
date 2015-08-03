@@ -1,7 +1,6 @@
 Smath.Game = function (game) {
 
     //  When a State is added to Phaser it automatically has the following properties set on it, even if they already exist:
-
     this.game;      //  a reference to the currently running game (Phaser.Game)
     this.add;       //  used to add sprites, text, groups, etc (Phaser.GameObjectFactory)
     this.camera;    //  a reference to the game camera (Phaser.Camera)
@@ -22,6 +21,7 @@ Smath.Game = function (game) {
     this.marker;
     this.map;
     this.layer;
+    this.selectedTiles = [];
 
     //  You can use any of these from any function within this State.
     //  But do consider them as being 'reserved words', i.e. don't create a property for your own game called "world" or you'll over-write the world reference.
@@ -36,45 +36,53 @@ Smath.Game.prototype = {
         this.map.addTilesetImage('tiles');
         this.layer = this.map.create('layer', 20, 20, 32, 32);
         this.fill();
-        this.createTileSelector();
+        this.marker = this.createTileSelector(this.game);
         this.game.input.addMoveCallback(this.updateMarker, this);
+        this.game.input.onUp.add(this.changeTiles, this);
     },
 
-    createTileSelector: function () {
+    createTileSelector: function (game) {
         //  Our tile selection window
-        //var tileSelector = this.game.add.group();
 
-        var tileSelectorBackground = this.game.make.graphics();
+        var tileSelectorBackground = game.make.graphics();
         tileSelectorBackground.beginFill(0x000000, 0.5);
         tileSelectorBackground.drawRect(0, 0, 800, 34);
         tileSelectorBackground.endFill();
 
-        //tileSelector.add(tileSelectorBackground);
-
-        // var tileStrip = tileSelector.create(1, 1, 'ground_1x1');
-        // tileStrip.inputEnabled = true;
-        //tileStrip.events.onInputDown.add(pickTile, this);
-
-        //tileSelector.fixedToCamera = true;
-
         //  Our painting marker
-        this.marker = this.game.add.graphics();
-        this.marker.lineStyle(2, 0x000000, 1);
-        this.marker.drawRect(0, 0, 32, 32);
+        var marker = game.add.graphics();
+        marker.lineStyle(2, 0x000000, 1);
+        marker.drawRect(0, 0, 32, 32);
+
+        return marker;
 
     },
 
     updateMarker: function () {
         var x = this.layer.getTileX(this.game.input.activePointer.worldX);
         var y = this.layer.getTileY(this.game.input.activePointer.worldY);
-
-        this.marker.x = x* 32;
+        this.marker.x = x * 32;
         this.marker.y = y * 32;
-
         if (this.game.input.mousePointer.isDown) {
-            var type = this.rnd.between(0,9);
-            this.map.putTile(type, x, y, this.layer);
+            this.saveTiles(x, y);
         }
+    },
+
+    saveTiles: function (x,y) {
+        var el = [x, y];
+        if(this.selectedTiles.indexOf(el) == -1){
+            this.selectedTiles.push(el);
+        }
+    },
+
+    changeTiles: function () {
+        var type = this.rnd.between(0, 9);
+        console.log(this.selectedTiles);
+        for (var i = 0; i < this.selectedTiles.length; i++) {
+            var coord = this.selectedTiles[i];
+            this.map.putTile(type, coord[0], coord[1], this.layer);
+        }
+        this.selectedTiles=[];
     },
 
     fill: function () {
