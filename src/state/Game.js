@@ -21,6 +21,7 @@ Smath.Game = function (game) {
     this.marker;
     this.map;
     this.layer;
+    this.mask;
     this.selectedTiles = [];
 
     //  You can use any of these from any function within this State.
@@ -33,8 +34,11 @@ Smath.Game.prototype = {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
         this.add.sprite(0, 0, 'green');
         this.map = this.game.add.tilemap();
-        this.map.addTilesetImage('tiles');
-        this.layer = this.map.create('layer', 20, 20, 32, 32);
+        this.map.addTilesetImage('tiles', 'tiles', 64, 64);
+
+        this.layer = this.map.create('layer', 10, 10, 64, 64);
+        this.mask = this.map.createBlankLayer('mask', 10, 10, 64, 64);
+
         this.fill();
         this.marker = this.createTileSelector(this.game);
         this.game.input.addMoveCallback(this.updateMarker, this);
@@ -43,58 +47,50 @@ Smath.Game.prototype = {
 
     createTileSelector: function (game) {
         //  Our tile selection window
-
         var tileSelectorBackground = game.make.graphics();
         tileSelectorBackground.beginFill(0x000000, 0.5);
-        tileSelectorBackground.drawRect(0, 0, 800, 34);
+        tileSelectorBackground.drawRect(0, 0, 800, 68);
         tileSelectorBackground.endFill();
 
         //  Our painting marker
         var marker = game.add.graphics();
         marker.lineStyle(2, 0x000000, 1);
-        marker.drawRect(0, 0, 32, 32);
+        marker.drawRect(0, 0, 64, 64);
 
         return marker;
-
     },
 
     updateMarker: function () {
         var x = this.layer.getTileX(this.game.input.activePointer.worldX);
         var y = this.layer.getTileY(this.game.input.activePointer.worldY);
-        this.marker.x = x * 32;
-        this.marker.y = y * 32;
+        this.marker.x = x * 64;
+        this.marker.y = y * 64;
         if (this.game.input.mousePointer.isDown) {
             this.saveTiles(x, y);
         }
     },
 
-    saveTiles: function (x,y) {
+    saveTiles: function (x, y) {
         var el = [x, y];
-        if(this.selectedTiles.indexOf(el) == -1){
+        if (this.selectedTiles.indexOf(el) == -1) {
             this.selectedTiles.push(el);
+            this.map.putTile(13, el[0], el[1], this.mask);
         }
     },
 
     changeTiles: function () {
-        var type = this.rnd.between(0, 9);
-        console.log(this.selectedTiles);
+        var type = this.rnd.between(0, 12);
         for (var i = 0; i < this.selectedTiles.length; i++) {
-            var coord = this.selectedTiles[i];
-            this.map.putTile(type, coord[0], coord[1], this.layer);
+            var tile = this.selectedTiles[i];
+            this.map.removeTile(tile[0], tile[1], this.mask);
+            this.map.putTile(type, tile[0], tile[1], this.layer);
         }
-        this.selectedTiles=[];
+        this.selectedTiles = [];
     },
 
     fill: function () {
-        this.map.putTile(0, 5, 5);
-        this.map.putTile(1, 7, 5);
-        this.map.putTile(2, 1, 5);
-        this.map.putTile(3, 2, 5);
-        this.map.putTile(4, 3, 5);
-        this.map.putTile(5, 4, 5);
-        this.map.putTile(6, 6, 5);
-    },
 
+    },
 
     update: function () {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
