@@ -72,24 +72,65 @@ Smath.Game.prototype = {
 
     saveTiles: function (x, y) {
         var el = [x, y];
-        if (this.selectedTiles.indexOf(el) == -1) {
+        if (!this.contains(this.selectedTiles, el)) {
             this.selectedTiles.push(el);
             this.map.putTile(13, el[0], el[1], this.mask);
         }
     },
 
+    contains: function (selectedTiles, tile) {
+        var contains = false;
+        selectedTiles.forEach(function (element) {
+            if (element[0] == tile[0] && element[1] == tile[1]) {
+                contains = true;
+            }
+        });
+        return contains;
+    },
+
     changeTiles: function () {
-        var type = this.rnd.between(0, 12);
+        var evaluation = "";
         for (var i = 0; i < this.selectedTiles.length; i++) {
-            var tile = this.selectedTiles[i];
-            this.map.removeTile(tile[0], tile[1], this.mask);
-            this.map.putTile(type, tile[0], tile[1], this.layer);
+            var coordinates = this.selectedTiles[i];
+            this.map.removeTile(coordinates[0], coordinates[1], this.mask);
+            var tile = this.map.getTile(coordinates[0], coordinates[1], this.layer);
+            var index = tile.index;
+            if (index == 10) {
+                index = "+";
+            } else if (index == 11) {
+                index = "-";
+            } else if (index == 12) {
+                index = "";
+            } else if (index == 13) {
+                index = "";
+            }
+            evaluation += (index);
+            //this.map.putTile(++index, coordinates[0], coordinates[1], this.layer);
         }
+        evaluation = eval(evaluation);
+        evaluation = evaluation.toString();
+        var type;
+        for (var i = 0; i < this.selectedTiles.length; i++) {
+            var coordinates = this.selectedTiles[this.selectedTiles.length - i - 1];
+            if (evaluation.length > i) {
+                this.map.putTile(evaluation[evaluation.length - 1 - i],coordinates[0],coordinates[1],this.layer);
+            }else{
+                this.map.removeTile(coordinates[0], coordinates[1], this.layer);
+            }
+        }
+        console.log(evaluation);
         this.selectedTiles = [];
     },
 
     fill: function () {
-
+        var type;
+        var width = 10;
+        for (var i = 0; i < 100; i++) {
+            type = this.rnd.between(0, 12);
+            var x = Math.floor(i / width);
+            var y = i % width;
+            this.map.putTile(type, x, y, this.layer);
+        }
     },
 
     update: function () {
