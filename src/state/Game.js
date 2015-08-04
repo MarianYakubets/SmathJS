@@ -66,16 +66,55 @@ Smath.Game.prototype = {
         this.marker.x = x * 64;
         this.marker.y = y * 64;
         if (this.game.input.mousePointer.isDown) {
-            this.saveTiles(x, y);
+            this.selectTile(x, y);
         }
     },
 
-    saveTiles: function (x, y) {
+    selectTile: function (x, y) {
         var el = [x, y];
-        if (!this.contains(this.selectedTiles, el)) {
-            this.selectedTiles.push(el);
-            this.map.putTile(13, el[0], el[1], this.mask);
+        //Contains
+        if (this.contains(this.selectedTiles, el)) {
+            return;
         }
+        if (!this.isConnected(this.selectedTiles, el)) {
+            return;
+        }
+        if (this.twoSymbolsInRow(this.selectedTiles, el)) {
+            return;
+        }
+        if (this.emptyTile(el)) {
+            return;
+        }
+        this.selectedTiles.push(el);
+        this.map.putTile(13, el[0], el[1], this.mask);
+
+    },
+
+    isConnected: function (selectedTiles, tile) {
+        if (selectedTiles.length == 0) {
+            return true;
+        }
+        var lastTile = selectedTiles[selectedTiles.length - 1];
+        if (tile[0] == lastTile[0]) {
+            return Math.abs(tile[1] - lastTile[1]) == 1;
+        } else if (tile[1] == lastTile[1]) {
+            return Math.abs(tile[0] - lastTile[0]) == 1;
+        }
+        return false;
+    },
+    emptyTile: function (tile) {
+        tile = this.map.getTile(tile[0], tile[1], this.layer);
+        return (tile.index > 11);
+    },
+
+    twoSymbolsInRow: function (selectedTiles, tile) {
+        if (selectedTiles.length == 0) {
+            return false;
+        }
+        var lastTile = selectedTiles[selectedTiles.length - 1];
+        lastTile = this.map.getTile(lastTile[0], lastTile[1], this.layer);
+        tile = this.map.getTile(tile[0], tile[1], this.layer);
+        return lastTile.index > 9 && tile.index > 9;
     },
 
     contains: function (selectedTiles, tile) {
@@ -86,9 +125,13 @@ Smath.Game.prototype = {
             }
         });
         return contains;
-    },
+    }
+    ,
 
     changeTiles: function () {
+        if (this.selectedTiles.length == 0) {
+            return;
+        }
         var evaluation = "";
         for (var i = 0; i < this.selectedTiles.length; i++) {
             var coordinates = this.selectedTiles[i];
@@ -113,14 +156,15 @@ Smath.Game.prototype = {
         for (var i = 0; i < this.selectedTiles.length; i++) {
             var coordinates = this.selectedTiles[this.selectedTiles.length - i - 1];
             if (evaluation.length > i) {
-                this.map.putTile(evaluation[evaluation.length - 1 - i],coordinates[0],coordinates[1],this.layer);
-            }else{
+                this.map.putTile(evaluation[evaluation.length - 1 - i], coordinates[0], coordinates[1], this.layer);
+            } else {
                 this.map.removeTile(coordinates[0], coordinates[1], this.layer);
             }
         }
         console.log(evaluation);
         this.selectedTiles = [];
-    },
+    }
+    ,
 
     fill: function () {
         var type;
@@ -131,11 +175,13 @@ Smath.Game.prototype = {
             var y = i % width;
             this.map.putTile(type, x, y, this.layer);
         }
-    },
+    }
+    ,
 
     update: function () {
         //  Honestly, just about anything could go here. It's YOUR game after all. Eat your heart out!
-    },
+    }
+    ,
 
     quitGame: function (pointer) {
         //  Here you should destroy anything you no longer need.
